@@ -9,8 +9,11 @@ public class PlayerController : MonoBehaviour
     public GameObject player;
     public InputActionAsset inputController;
     public List<GameObject> villagers = new List<GameObject>();
-    public float maxSpeed = 0.2f;
-    public float acceleration = 0.04f;
+    public float maxSpeed;
+    public float acceleration;
+    public float deceleration;
+    public float airborneAcceleration;
+    public float airborneDeceleration;
     public GameObject followPos;
     private List<Vector2> storedPosition;
     private InputAction moveInput;
@@ -47,7 +50,8 @@ public class PlayerController : MonoBehaviour
         if (moveDirection != 0)
         {
             direction = moveDirection;
-            velocity += acceleration * direction;
+            if (airborne) { velocity += airborneAcceleration * direction; }
+            else { velocity += acceleration * direction; }
             if (Math.Abs(velocity) > maxSpeed)
             {
                 velocity = maxSpeed * direction;
@@ -55,8 +59,9 @@ public class PlayerController : MonoBehaviour
         }
         else if (Math.Abs(velocity) > 0)
         {
-            velocity -= acceleration * direction;
-            if (Math.Abs(velocity) < 0.02)
+            if (airborne) { velocity -= airborneAcceleration * direction; }
+            else { velocity -= deceleration * direction; }
+            if (Math.Abs(velocity) < 0.01f)
             {
                 velocity = 0;
             }

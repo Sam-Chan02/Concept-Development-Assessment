@@ -20,6 +20,7 @@ public class VillagerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.isKinematic = true;
         dead = false;
+        Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     // Update is called once per frame
@@ -29,7 +30,6 @@ public class VillagerController : MonoBehaviour
         {
             villagerList.Add(this.gameObject);
             following = true;
-            Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>());
         }
         if (following)
         {
