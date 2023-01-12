@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
+  - component: {fileID: 519420030}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -149,6 +150,18 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_Enabled: 1
+--- !u!114 &519420030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 892cb3c0421524244ab52e31a8ef4305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -420,7 +433,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1450621536}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.75, y: 0.3, z: 0}
+  m_LocalPosition: {x: 4.05, y: -0.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -472,7 +485,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 3
 --- !u!1001 &1518319284
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -538,16 +551,32 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: cam
+      value: 
+      objectReference: {fileID: 519420031}
+    - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: maxSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
       propertyPath: followPos
       value: 
       objectReference: {fileID: 845219512}
     - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: acceleration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: deceleration
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
       propertyPath: airborneAcceleration
-      value: 0.007
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
       propertyPath: airborneDeceleration
-      value: 0.007
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7391075396785521464, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
       propertyPath: m_Constraints
@@ -597,6 +626,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7391075396785521467, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: m_Size.x
+      value: 0.64
+      objectReference: {fileID: 0}
     - target: {fileID: 7391075396785521468, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
       propertyPath: m_Name
       value: Player
@@ -620,11 +653,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8015210987115514047, guid: 71d0169dc9a5ceb4bb1fcc31a38e762a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.41
+      value: -2.88
       objectReference: {fileID: 0}
     - target: {fileID: 8015210987115514047, guid: 71d0169dc9a5ceb4bb1fcc31a38e762a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.38
+      value: 0.04
       objectReference: {fileID: 0}
     - target: {fileID: 8015210987115514047, guid: 71d0169dc9a5ceb4bb1fcc31a38e762a, type: 3}
       propertyPath: m_LocalPosition.z

@@ -9,14 +9,17 @@ public class PlayerController : MonoBehaviour
     public GameObject player;
     public InputActionAsset inputController;
     public List<GameObject> villagers = new List<GameObject>();
+    public Camera cam;
     public float maxSpeed;
     public float acceleration;
     public float deceleration;
     public float airborneAcceleration;
     public float airborneDeceleration;
     public GameObject followPos;
+    public int health = 3;
+    public int lives = 5;
+    public Vector2 spawn = new Vector2(0f, 0f);
     private List<Vector2> storedPosition;
-    private InputAction moveInput;
     private Rigidbody2D rb;
     private float velocity = 0;
     private float moveDirection;
@@ -28,8 +31,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        moveInput = inputController.FindAction("Move");
-        transform.position = new Vector2(0f, 0f);
+        transform.position = spawn;
         storedPosition = new List<Vector2>();
     }
 
@@ -59,14 +61,15 @@ public class PlayerController : MonoBehaviour
         }
         else if (Math.Abs(velocity) > 0)
         {
-            if (airborne) { velocity -= airborneAcceleration * direction; }
+            if (airborne) { velocity -= airborneDeceleration * direction; }
             else { velocity -= deceleration * direction; }
             if (Math.Abs(velocity) < 0.01f)
             {
                 velocity = 0;
             }
         }
-        transform.Translate(new Vector2(velocity, 0));
+        //transform.Translate(new Vector2(velocity, 0));
+        rb.velocity = new Vector2(velocity, rb.velocity.y);
     }
 
     void OnMove(InputValue direction)
@@ -91,6 +94,21 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.transform.tag == "Enemy")
+        {
+            health --;
+            if (health <= 0)
+            {
+                lives--;
+                Debug.Log("hit");
+                if (lives <= 0)
+                {
+                    transform.position = spawn;
+                    velocity = 0;
+                    health = 3;
+                }
+            }
+        }
         airborne = false;
         jumps = 1;
     }
