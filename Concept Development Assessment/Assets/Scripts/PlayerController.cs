@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using System;
 
 public class PlayerController : MonoBehaviour
 {
@@ -15,10 +14,13 @@ public class PlayerController : MonoBehaviour
     public float deceleration;
     public float airborneAcceleration;
     public float airborneDeceleration;
+    public float jumpForce;
     public GameObject followPos;
     public int health = 3;
     public int lives = 5;
     public Vector2 spawn = new Vector2(0f, 0f);
+    public int coins;
+
     private List<Vector2> storedPosition;
     private Rigidbody2D rb;
     private float velocity = 0;
@@ -33,11 +35,13 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         transform.position = spawn;
         storedPosition = new List<Vector2>();
+        coins = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
+        //Debug.Log(velocity);
         storedPosition.Add(transform.position);
 
         if(storedPosition.Count > 30)
@@ -54,21 +58,24 @@ public class PlayerController : MonoBehaviour
             direction = moveDirection;
             if (airborne) { velocity += airborneAcceleration * direction; }
             else { velocity += acceleration * direction; }
-            if (Math.Abs(velocity) > maxSpeed)
+            if (velocity > maxSpeed)
             {
-                velocity = maxSpeed * direction;
+                velocity = maxSpeed;
+            }
+            else if (velocity < -maxSpeed)
+            {
+                velocity = -maxSpeed;
             }
         }
-        else if (Math.Abs(velocity) > 0)
+        else if (Mathf.Abs(velocity) > 0)
         {
             if (airborne) { velocity -= airborneDeceleration * direction; }
             else { velocity -= deceleration * direction; }
-            if (Math.Abs(velocity) < 0.01f)
+            if ((!airborne && Mathf.Abs(velocity) < deceleration/2) || (airborne && Mathf.Abs(velocity) < airborneDeceleration / 2))
             {
                 velocity = 0;
             }
         }
-        //transform.Translate(new Vector2(velocity, 0));
         rb.velocity = new Vector2(velocity, rb.velocity.y);
     }
 
@@ -83,7 +90,7 @@ public class PlayerController : MonoBehaviour
         {
             jumps--;
             airborne = true;
-            rb.AddForce(new Vector2(0, 300));
+            rb.AddForce(new Vector2(0, jumpForce));
         }
     }
 
@@ -94,22 +101,34 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.tag == "Enemy")
+        foreach (var contact in collision.contacts)
         {
-            health --;
-            if (health <= 0)
+            if (contact.normal.y < 0.9f)
             {
-                lives--;
-                Debug.Log("hit");
-                if (lives <= 0)
+                if (collision.transform.tag == "Enemy")
                 {
-                    transform.position = spawn;
-                    velocity = 0;
-                    health = 3;
+                    health--;
+                    if (health <= 0)
+                    {
+                        lives--;
+                        if (lives <= 0)
+                        {
+                            transform.position = spawn;
+                            velocity = 0;
+                            health = 3;
+                        }
+                    }
                 }
             }
+            if (Mathf.Abs(contact.normal.x) > 0.9f)
+            {
+                velocity = 0;
+            }
+            else
+            {
+                airborne = false;
+                jumps = 1;
+            }
         }
-        airborne = false;
-        jumps = 1;
     }
 }

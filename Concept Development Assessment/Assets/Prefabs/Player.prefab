@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1503563064175744416}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: FollowPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,8 @@ GameObject:
   - component: {fileID: 7391075396785521463}
   - component: {fileID: 7391075396785521462}
   - component: {fileID: 7391075396785521467}
-  m_Layer: 0
+  - component: {fileID: 489421667}
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -137,7 +138,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!114 &7391075396785521463
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -153,9 +154,16 @@ MonoBehaviour:
   player: {fileID: 7391075396785521468}
   inputController: {fileID: -944628639613478452, guid: 93039a8906d4f0f4cb469eb7d5a5b1d7, type: 3}
   villagers: []
-  maxSpeed: 0.2
-  acceleration: 0.04
-  followPos: {fileID: 0}
+  cam: {fileID: 0}
+  maxSpeed: 10
+  acceleration: 2
+  deceleration: 2
+  airborneAcceleration: 1
+  airborneDeceleration: 1
+  followPos: {fileID: 4610604574123676398}
+  health: 3
+  lives: 5
+  spawn: {x: 0, y: 0}
 --- !u!114 &7391075396785521462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,4 +243,30 @@ BoxCollider2D:
   m_AutoTiling: 0
   serializedVersion: 2
   m_Size: {x: 0.64, y: 0.64}
+  m_EdgeRadius: 0
+--- !u!61 &489421667
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7391075396785521468}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 6200000, guid: febfca1505b844f4bbf6d9b72990a8e8, type: 2}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.64, y: 0.64}
+    newSize: {x: 1, y: 2}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.66, y: 0.6}
   m_EdgeRadius: 0
