@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     public float airborneDeceleration;
     public float jumpForce;
     public GameObject followPos;
+    public int maxHealth = 3;
     public int health = 3;
     public int lives = 5;
     public Vector2 spawn = new Vector2(0f, 0f);
@@ -23,16 +24,21 @@ public class PlayerController : MonoBehaviour
 
     private List<Vector2> storedPosition;
     private Rigidbody2D rb;
+    private SpriteRenderer sr;
     private float velocity = 0;
     private float moveDirection;
     private float direction;
     private int jumps = 1;
     private bool airborne = false;
+    private float inVulnLength = 0.5f;
+    private float inVulnTimer = 0.5f;
+    private bool inVuln = false;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
         transform.position = spawn;
         storedPosition = new List<Vector2>();
         coins = 0;
@@ -41,13 +47,26 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(velocity);
+        Debug.Log(health);
         storedPosition.Add(transform.position);
 
         if(storedPosition.Count > 30)
         {
             followPos.transform.position = storedPosition[0];
             storedPosition.RemoveAt(0);
+        }
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+        if (inVuln)
+        {
+            inVulnTimer -= Time.deltaTime;
+            if (inVulnTimer < 0)
+            {
+                inVuln = false;
+                inVulnTimer = inVulnLength;
+            }
         }
     }
 
@@ -82,6 +101,10 @@ public class PlayerController : MonoBehaviour
     void OnMove(InputValue direction)
     {
         moveDirection = direction.Get<float>();
+        if (moveDirection != 0)
+        {
+        sr.flipX = (moveDirection < 0);
+        }
     }
 
     void OnJump()
@@ -105,17 +128,20 @@ public class PlayerController : MonoBehaviour
         {
             if (contact.normal.y < 0.9f)
             {
-                if (collision.transform.tag == "Enemy")
+                if (contact.collider.tag == "Enemy" && !inVuln)
                 {
+                    inVuln = true;
                     health--;
                     if (health <= 0)
                     {
                         lives--;
+                        transform.position = spawn;
+                        cam.transform.position = new Vector3(spawn.x+7, spawn.y+2.2f, cam.transform.position.z);
+                        velocity = 0;
+                        health = 3;
                         if (lives <= 0)
                         {
-                            transform.position = spawn;
-                            velocity = 0;
-                            health = 3;
+                            
                         }
                     }
                 }

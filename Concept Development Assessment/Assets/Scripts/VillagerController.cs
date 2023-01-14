@@ -54,7 +54,7 @@ public class VillagerController : MonoBehaviour
         {
             if (villagerList.IndexOf(this.gameObject) == 0)
             {
-                transform.position = (player.transform.GetChild(0).position - new Vector3(0,0.65f, 0));
+                transform.position = (player.transform.GetChild(0).position - new Vector3(0,1.4f, 0));
             }
             else
             {
