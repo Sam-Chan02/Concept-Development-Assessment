@@ -44,6 +44,8 @@ public class PlayerController : MonoBehaviour
     private float inVulnTimer = 0.5f;
     private bool inVuln = false;
     private bool hit;
+    private bool dead;
+    private bool won = false;
 
     // Start is called before the first frame update
     void Start()
@@ -56,6 +58,7 @@ public class PlayerController : MonoBehaviour
         jumpHold = inputController.FindAction("Jump");
         transform.position = spawn;
         coins = 0;
+        dead = false;
     }
 
     // Update is called once per frame
@@ -74,42 +77,48 @@ public class PlayerController : MonoBehaviour
                 inVulnTimer = inVulnLength;
             }
         }
+        if (player.transform.position.y < -3 && !dead && !won)
+        {
+            Death();
+        }
     }
 
     private void FixedUpdate()
     {
-        hit = false;
-        if (moveDirection != 0)
+        if (!won)
         {
-            cmpDirection = direction * moveDirection;
-            if (speed == 0 && cmpDirection <= 0)
+            hit = false;
+            if (moveDirection != 0)
             {
-                direction = moveDirection;
-                cmpDirection = 1;
+                cmpDirection = direction * moveDirection;
+                if (speed == 0 && cmpDirection <= 0)
+                {
+                    direction = moveDirection;
+                    cmpDirection = 1;
+                }
+
+                if (airborne) { acceleration = airborneAcceleration; }
+                else { acceleration = groundedAcceleration; }
+                speed += acceleration * cmpDirection;
+
+            }
+            else if (speed > 0)
+            {
+                if (airborne) { deceleration = airborneDeceleration; }
+                else { deceleration = groundedDeceleration; }
+                speed -= deceleration;
             }
 
-            if (airborne) { acceleration = airborneAcceleration; }
-            else { acceleration = groundedAcceleration; }
-            speed += acceleration * cmpDirection;
+            speed = Mathf.Clamp(speed, 0, maxSpeed);
+            rb.velocity = new Vector2(speed * direction, rb.velocity.y);
 
+
+            if (jumpHold.ReadValue<float>() > 0 && jumpTimer > 0)
+            {
+                rb.AddForce(new Vector2(0, jumpHoldForce));
+            }
+            jumpTimer = Mathf.Clamp(jumpTimer - Time.deltaTime, 0, jumpLength);
         }
-        else if (speed > 0)
-        {
-            if (airborne) { deceleration = airborneDeceleration; }
-            else { deceleration = groundedDeceleration; }
-            speed -= deceleration;
-        }
-        
-        speed = Mathf.Clamp(speed, 0, maxSpeed);
-        rb.velocity = new Vector2(speed * direction, rb.velocity.y);
-
-
-        if (jumpHold.ReadValue<float>() > 0 && jumpTimer > 0)
-        {
-            rb.AddForce(new Vector2(0, jumpHoldForce));
-        }
-        jumpTimer = Mathf.Clamp(jumpTimer - Time.deltaTime, 0, jumpLength);
-
         storedPosition.Add(transform.position);
         storedFacing.Add(sr.flipX);
 
@@ -162,7 +171,6 @@ public class PlayerController : MonoBehaviour
                     contact.collider.GetComponentInParent<EnemyController>().health -= 1;
                     if (jumpHold.ReadValue<float>() > 0 && !hit)
                     {
-                        Debug.Log("boing");
                         rb.AddForce(new Vector2(0, jumpForce * 1.5f));
                     }
                     else if (!hit)
@@ -193,19 +201,42 @@ public class PlayerController : MonoBehaviour
                     health--;
                     if (health <= 0)
                     {
-                        lives--;
-                        transform.position = spawn;
-                        cam.transform.position = new Vector3(spawn.x + 7, spawn.y + 2.2f, cam.transform.position.z);
-                        speed = 0;
-                        health = 3;
-                        if (lives <= 0)
-                        {
-
-                        }
+                        Death();
                     }
                 }
             }
         }
+
+    }
+
+    private void Death()
+    {
+        rb.velocity = new Vector2(0, 20);
+        dead = true;
+        Invoke("Die", 0.5f);
+    }
+    private void Die()
+    {
+        lives--;
+        transform.position = spawn;
+        cam.transform.position = new Vector3(spawn.x + 7, spawn.y + 2.2f, cam.transform.position.z);
+        speed = 0;
+        rb.velocity = new Vector2(0, 0);
+        health = 3;
+        if (lives <= 0)
+        {
+            Lose();
+        }
+    }
+
+    public void Win()
+    {
+        rb.velocity = new Vector2(10, 0);
+        won = true;
+    }
+
+    private void Lose()
+    {
 
     }
 }

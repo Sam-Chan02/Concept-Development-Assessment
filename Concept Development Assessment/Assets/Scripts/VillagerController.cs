@@ -15,11 +15,23 @@ public class VillagerController : MonoBehaviour
     private SpriteRenderer sr;
     private bool dead;
     private int villagerDelay;
+    public Sprite heartVillager;
+    public Sprite lifeVillager;
+    public Sprite jumpVillager;
+    public string power = "Heart";
+    private PlayerController playerController;
+    public float jumpForceUpgrade = 50;
+    public float jumpHoldForceUpgrade = 10;
+    public Canvas UI;
+    private UIController uiController;
     // Start is called before the first frame update
     void Start()
     {
+        UI = GameObject.FindGameObjectWithTag("UI").GetComponent<Canvas>();
+        uiController = UI.GetComponent<UIController>();
         player = GameObject.FindGameObjectWithTag("Player");
-        villagerList = player.GetComponent<PlayerController>().villagers;
+        playerController = player.GetComponent<PlayerController>();
+        villagerList = playerController.villagers;
         storedPosition = new List<Vector2>();
         storedFacing = new List<bool>();
         sr = GetComponent<SpriteRenderer>();
@@ -27,9 +39,21 @@ public class VillagerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         rb.isKinematic = true;
         dead = false;
-        villagerDelay = player.GetComponent<PlayerController>().villagerDelay;
+        villagerDelay = playerController.villagerDelay;
         Physics2D.IgnoreCollision(player.GetComponents<Collider2D>()[0], GetComponent<Collider2D>());
         Physics2D.IgnoreCollision(player.GetComponents<Collider2D>()[1], GetComponent<Collider2D>());
+        if (power == "Health")
+        {
+            sr.sprite = heartVillager;
+        }
+        else if (power == "Life")
+        {
+            sr.sprite = lifeVillager;
+        }
+        else
+        {
+            sr.sprite = jumpVillager;
+        }
     }
 
     // Update is called once per frame
@@ -39,6 +63,21 @@ public class VillagerController : MonoBehaviour
         {
             villagerList.Add(this.gameObject);
             following = true;
+            if (power == "Health")
+            {
+                playerController.maxHealth += 1;
+                playerController.health += 1;
+            }
+            else if (power == "Life")
+            {
+                playerController.lives += 1;
+            }
+            else
+            {
+                playerController.jumpForce += jumpForceUpgrade;
+                playerController.jumpHoldForce += jumpHoldForceUpgrade;
+            }
+            uiController.PowerStart(power);
         }
         if (transform.position.y < -8 && dead)
         {
@@ -48,7 +87,7 @@ public class VillagerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (following && !dead)
+        if (following && !dead && this.gameObject != null)
         {
             storedPosition.Add(transform.position);
             storedFacing.Add(sr.flipX);
@@ -81,7 +120,21 @@ public class VillagerController : MonoBehaviour
         {
             if (following && !dead)
             {
-                villagerList.RemoveAt(villagerList.IndexOf(this.gameObject));
+                if (power == "Heart")
+                {
+                    playerController.maxHealth -= 1;
+                }
+                else if (power == "Life")
+                {
+                    playerController.lives -= 1;
+                }
+                else
+                {
+                    playerController.jumpForce -= jumpForceUpgrade;
+                    playerController.jumpHoldForce -= jumpHoldForceUpgrade;
+                }
+                uiController.PowerEnd(power);
+
             }
             dead = true;
             GetComponent<Collider2D>().enabled = false;
