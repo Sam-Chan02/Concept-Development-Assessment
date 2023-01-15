@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     public List<GameObject> villagers = new List<GameObject>();
     public Camera cam;
     public float maxSpeed;
-    public float acceleration;
-    public float deceleration;
+    public float groundedAcceleration;
+    public float groundedDeceleration;
     public float airborneAcceleration;
     public float airborneDeceleration;
     public float jumpForce;
@@ -21,14 +21,23 @@ public class PlayerController : MonoBehaviour
     public int lives = 5;
     public Vector2 spawn = new Vector2(0f, 0f);
     public int coins;
+    public bool storedFace;
+    public int villagerDelay = 15;
 
+    private List<bool> storedFacing;
     private List<Vector2> storedPosition;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
-    private float velocity = 0;
+    private InputAction jumpHold;
+    private float speed = 0;
+    private float acceleration;
+    private float deceleration;
     private float moveDirection;
     private float direction;
+    private float cmpDirection;
     private int jumps = 1;
+    private float jumpLength = 0.2f;
+    private float jumpTimer = 0.2f;
     private bool airborne = false;
     private float inVulnLength = 0.5f;
     private float inVulnTimer = 0.5f;
@@ -39,22 +48,17 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponent<SpriteRenderer>();
-        transform.position = spawn;
         storedPosition = new List<Vector2>();
+        storedFacing = new List<bool>();
+        storedFace = sr.flipX;
+        jumpHold = inputController.FindAction("Jump");
+        transform.position = spawn;
         coins = 0;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(health);
-        storedPosition.Add(transform.position);
-
-        if(storedPosition.Count > 30)
-        {
-            followPos.transform.position = storedPosition[0];
-            storedPosition.RemoveAt(0);
-        }
         if (health > maxHealth)
         {
             health = maxHealth;
@@ -74,28 +78,45 @@ public class PlayerController : MonoBehaviour
     { 
         if (moveDirection != 0)
         {
-            direction = moveDirection;
-            if (airborne) { velocity += airborneAcceleration * direction; }
-            else { velocity += acceleration * direction; }
-            if (velocity > maxSpeed)
+            cmpDirection = direction * moveDirection;
+            if (speed == 0 && cmpDirection <= 0)
             {
-                velocity = maxSpeed;
+                direction = moveDirection;
+                cmpDirection = 1;
             }
-            else if (velocity < -maxSpeed)
-            {
-                velocity = -maxSpeed;
-            }
+
+            if (airborne) { acceleration = airborneAcceleration; }
+            else { acceleration = groundedAcceleration; }
+            speed += acceleration * cmpDirection;
+
         }
-        else if (Mathf.Abs(velocity) > 0)
+        else if (speed > 0)
         {
-            if (airborne) { velocity -= airborneDeceleration * direction; }
-            else { velocity -= deceleration * direction; }
-            if ((!airborne && Mathf.Abs(velocity) < deceleration/2) || (airborne && Mathf.Abs(velocity) < airborneDeceleration / 2))
-            {
-                velocity = 0;
-            }
+            if (airborne) { deceleration = airborneDeceleration; }
+            else { deceleration = groundedDeceleration; }
+            speed -= deceleration;
         }
-        rb.velocity = new Vector2(velocity, rb.velocity.y);
+        
+        speed = Mathf.Clamp(speed, 0, maxSpeed);
+        rb.velocity = new Vector2(speed * direction, rb.velocity.y);
+
+
+        if (jumpHold.ReadValue<float>() > 0 && jumpTimer > 0)
+        {
+            rb.AddForce(new Vector2(0, 35));
+        }
+        jumpTimer = Mathf.Clamp(jumpTimer - Time.deltaTime, 0, jumpLength);
+
+        storedPosition.Add(transform.position);
+        storedFacing.Add(sr.flipX);
+
+        if (storedPosition.Count > villagerDelay)
+        {
+            followPos.transform.position = storedPosition[0];
+            storedPosition.RemoveAt(0);
+            storedFace = storedFacing[0];
+            storedFacing.RemoveAt(0);
+        }
     }
 
     void OnMove(InputValue direction)
@@ -113,6 +134,7 @@ public class PlayerController : MonoBehaviour
         {
             jumps--;
             airborne = true;
+            jumpTimer = jumpLength;
             rb.AddForce(new Vector2(0, jumpForce));
         }
     }
@@ -137,7 +159,7 @@ public class PlayerController : MonoBehaviour
                         lives--;
                         transform.position = spawn;
                         cam.transform.position = new Vector3(spawn.x+7, spawn.y+2.2f, cam.transform.position.z);
-                        velocity = 0;
+                        speed = 0;
                         health = 3;
                         if (lives <= 0)
                         {
@@ -148,7 +170,7 @@ public class PlayerController : MonoBehaviour
             }
             if (Mathf.Abs(contact.normal.x) > 0.9f)
             {
-                velocity = 0;
+                speed = 0;
             }
             else
             {

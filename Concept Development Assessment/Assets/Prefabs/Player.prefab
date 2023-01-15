@@ -61,7 +61,7 @@ Transform:
   m_GameObject: {fileID: 7391075396785521468}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2.23, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_Children:
   - {fileID: 1503563064175744416}
   m_Father: {fileID: 0}
@@ -106,13 +106,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 31e5297e530ede84bbd4236c3f537e9a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 0.24, y: 0.24}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -156,8 +156,8 @@ MonoBehaviour:
   villagers: []
   cam: {fileID: 0}
   maxSpeed: 10
-  acceleration: 2
-  deceleration: 2
+  groundedAcceleration: 2
+  groundedDeceleration: 2
   airborneAcceleration: 1
   airborneDeceleration: 1
   jumpForce: 800
@@ -167,6 +167,8 @@ MonoBehaviour:
   lives: 5
   spawn: {x: 0, y: 1}
   coins: 0
+  storedFace: 0
+  villagerDelay: 10
 --- !u!114 &7391075396785521462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,18 +236,18 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.15}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.5, y: 1}
-    newSize: {x: 1, y: 2}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 0.24, y: 0.24}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 0.7}
+  m_Size: {x: 0.35, y: 0.67}
   m_EdgeRadius: 0
 --- !u!61 &489421667
 BoxCollider2D:
@@ -260,16 +262,16 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.15}
+  m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.5, y: 1}
-    newSize: {x: 1, y: 2}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 0.24, y: 0.24}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.25, y: 0.6}
+  m_Size: {x: 0.42, y: 0.6}
   m_EdgeRadius: 0

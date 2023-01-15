@@ -20,9 +20,9 @@ public class CameraMovement : MonoBehaviour
         {
             transform.position = new Vector3(player.position.x, transform.position.y, transform.position.z);
         }
-        if (distance.y > 0)
+        if (distance.y-2 > 0)
         {
-            transform.position = new Vector3(transform.position.x, player.position.y, transform.position.z);
+            transform.position = new Vector3(transform.position.x, player.position.y-2, transform.position.z);
         }
         if (distance.y + 2 < 0 && transform.position.y > 2.1)
         {
