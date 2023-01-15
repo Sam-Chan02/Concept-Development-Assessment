@@ -161,6 +161,7 @@ MonoBehaviour:
   airborneAcceleration: 1
   airborneDeceleration: 1
   jumpForce: 800
+  jumpHoldForce: 30
   followPos: {fileID: 4610604574123676398}
   maxHealth: 3
   health: 3

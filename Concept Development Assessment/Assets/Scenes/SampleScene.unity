@@ -1400,6 +1400,7 @@ GameObject:
   - component: {fileID: 1450621537}
   - component: {fileID: 1450621539}
   - component: {fileID: 1450621540}
+  - component: {fileID: 1450621541}
   m_Layer: 0
   m_Name: Square
   m_TagString: Enemy
@@ -1447,7 +1448,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 7482667652216324306, guid: 48e93eef0688c4a259cb0eddcd8661f7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0699a4f01f7d95e49b8e25221c9be5b4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1510,7 +1511,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 10000
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -1518,7 +1519,21 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 3
+  m_Constraints: 0
+--- !u!114 &1450621541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1450621536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d35deb5ce73269d448b9d92b24219f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  health: 1
+  enemySpeed: 2
 --- !u!1001 &1498835889
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1985,6 +2000,14 @@ PrefabInstance:
       propertyPath: cam
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: jumpForce
+      value: 700
+      objectReference: {fileID: 0}
+    - target: {fileID: 7391075396785521463, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
+      propertyPath: jumpHoldForce
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 7391075396785521465, guid: 08cca6ed3caca7b4daa09c4dcf7e6e0f, type: 3}
       propertyPath: m_RootOrder
       value: 15

@@ -79,7 +79,10 @@ public class VillagerController : MonoBehaviour
     {
         if (collision.transform.tag == "Enemy")
         {
-            villagerList.RemoveAt(villagerList.IndexOf(this.gameObject));
+            if (following && !dead)
+            {
+                villagerList.RemoveAt(villagerList.IndexOf(this.gameObject));
+            }
             dead = true;
             GetComponent<Collider2D>().enabled = false;
             rb.isKinematic = false;

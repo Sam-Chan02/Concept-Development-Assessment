@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     public float airborneAcceleration;
     public float airborneDeceleration;
     public float jumpForce;
+    public float jumpHoldForce;
     public GameObject followPos;
     public int maxHealth = 3;
     public int health = 3;
@@ -42,6 +43,7 @@ public class PlayerController : MonoBehaviour
     private float inVulnLength = 0.5f;
     private float inVulnTimer = 0.5f;
     private bool inVuln = false;
+    private bool hit;
 
     // Start is called before the first frame update
     void Start()
@@ -75,7 +77,8 @@ public class PlayerController : MonoBehaviour
     }
 
     private void FixedUpdate()
-    { 
+    {
+        hit = false;
         if (moveDirection != 0)
         {
             cmpDirection = direction * moveDirection;
@@ -103,7 +106,7 @@ public class PlayerController : MonoBehaviour
 
         if (jumpHold.ReadValue<float>() > 0 && jumpTimer > 0)
         {
-            rb.AddForce(new Vector2(0, 35));
+            rb.AddForce(new Vector2(0, jumpHoldForce));
         }
         jumpTimer = Mathf.Clamp(jumpTimer - Time.deltaTime, 0, jumpLength);
 
@@ -148,6 +151,40 @@ public class PlayerController : MonoBehaviour
     {
         foreach (var contact in collision.contacts)
         {
+            if (Mathf.Abs(contact.normal.x) > 0.9f)
+            {
+                speed = 0;
+            }
+            else
+            {
+                if (contact.collider.tag == "Enemy")
+                {
+                    contact.collider.GetComponentInParent<EnemyController>().health -= 1;
+                    if (jumpHold.ReadValue<float>() > 0 && !hit)
+                    {
+                        Debug.Log("boing");
+                        rb.AddForce(new Vector2(0, jumpForce * 1.5f));
+                    }
+                    else if (!hit)
+                    {
+                        rb.AddForce(new Vector2(0, 400));
+                    }
+                    hit = true;
+
+                }
+                else
+                {
+                    jumps = 1;
+                    airborne = false;
+                }
+            }
+        }
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        foreach (var contact in collision.contacts)
+        {
             if (contact.normal.y < 0.9f)
             {
                 if (contact.collider.tag == "Enemy" && !inVuln)
@@ -158,25 +195,17 @@ public class PlayerController : MonoBehaviour
                     {
                         lives--;
                         transform.position = spawn;
-                        cam.transform.position = new Vector3(spawn.x+7, spawn.y+2.2f, cam.transform.position.z);
+                        cam.transform.position = new Vector3(spawn.x + 7, spawn.y + 2.2f, cam.transform.position.z);
                         speed = 0;
                         health = 3;
                         if (lives <= 0)
                         {
-                            
+
                         }
                     }
                 }
             }
-            if (Mathf.Abs(contact.normal.x) > 0.9f)
-            {
-                speed = 0;
-            }
-            else
-            {
-                airborne = false;
-                jumps = 1;
-            }
         }
+
     }
 }
