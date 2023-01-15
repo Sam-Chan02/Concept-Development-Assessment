@@ -213,18 +213,23 @@ public class PlayerController : MonoBehaviour
     private void Death()
     {
         rb.velocity = new Vector2(0, 20);
+        GetComponents<Collider2D>()[0].enabled = false;
+        GetComponents<Collider2D>()[1].enabled = false;
         dead = true;
         Invoke("Die", 1f);
     }
     private void Die()
     {
-        if (lives < 0)
+        if (lives > 0)
         {
             transform.position = spawn;
             cam.transform.position = new Vector3(spawn.x + 7, spawn.y + 2.2f, cam.transform.position.z);
             speed = 0;
             rb.velocity = new Vector2(0, 0);
             health = 3;
+            GetComponents<Collider2D>()[0].enabled = true;
+            GetComponents<Collider2D>()[1].enabled = true;
+            dead = false;
         }
         else
         {

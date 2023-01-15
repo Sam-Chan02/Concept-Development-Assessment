@@ -87,7 +87,7 @@ public class VillagerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (following && !dead && this.gameObject != null)
+        if (following && !dead)
         {
             storedPosition.Add(transform.position);
             storedFacing.Add(sr.flipX);
@@ -107,8 +107,12 @@ public class VillagerController : MonoBehaviour
             }
             else
             {
-                transform.position = villagerList[villagerList.IndexOf(this.gameObject) - 1].transform.GetChild(0).position;
-                sr.flipX = villagerList[villagerList.IndexOf(this.gameObject) - 1].GetComponent<VillagerController>().storedFace;
+                if (villagerList[villagerList.IndexOf(this.gameObject) - 1] != null)
+                {
+
+                    transform.position = villagerList[villagerList.IndexOf(this.gameObject) - 1].transform.GetChild(0).position;
+                    sr.flipX = villagerList[villagerList.IndexOf(this.gameObject) - 1].GetComponent<VillagerController>().storedFace;
+                }
             }
             
         }
@@ -140,6 +144,7 @@ public class VillagerController : MonoBehaviour
             GetComponent<Collider2D>().enabled = false;
             rb.isKinematic = false;
             rb.AddForce(new Vector2(0, 500));
+            villagerList.Remove(this.gameObject);
         }
     }
 }

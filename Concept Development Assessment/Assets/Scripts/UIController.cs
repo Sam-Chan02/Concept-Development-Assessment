@@ -74,7 +74,7 @@ public class UIController : MonoBehaviour
         {
             coins.text = "0" + coinString;
         }
-        lives.text = playerController.lives.ToString();
+        lives.text = "X"+playerController.lives.ToString();
 
         if (playerController.won)
         {
@@ -115,17 +115,17 @@ public class UIController : MonoBehaviour
         if (power == "Health")
         {
             healthUp.enabled = true;
-            Invoke("disableHealth", 0.5f);
+            Invoke("disableHealth", 0.75f);
         }
         else if (power == "Life")
         {
             lifeUp.enabled = true;
-            Invoke("disableLife", 0.5f);
+            Invoke("disableLife", 0.75f);
         }
         else if (power == "Jump")
         {
             jumpUp.enabled = true;
-            Invoke("disableJump", 0.5f);
+            Invoke("disableJump", 0.75f);
         }
     }
     public void PowerEnd(string power)
@@ -133,17 +133,17 @@ public class UIController : MonoBehaviour
         if (power == "Health")
         {
             healthDown.enabled = true;
-            Invoke("disableHealthDown", 0.5f);
+            Invoke("disableHealthDown", 0.75f);
         }
         else if (power == "Life")
         {
             lifeDown.enabled = true;
-            Invoke("disableLifeDown", 0.5f);
+            Invoke("disableLifeDown", 0.75f);
         }
         else if (power == "Jump")
         {
             jumpDown.enabled = true;
-            Invoke("disableJumpDown", 0.5f);
+            Invoke("disableJumpDown", 0.75f);
         }
     }
 
