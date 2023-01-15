@@ -24,6 +24,8 @@ public class PlayerController : MonoBehaviour
     public int coins;
     public bool storedFace;
     public int villagerDelay = 15;
+    public bool won = false;
+    public bool lost = false;
 
     private List<bool> storedFacing;
     private List<Vector2> storedPosition;
@@ -45,7 +47,6 @@ public class PlayerController : MonoBehaviour
     private bool inVuln = false;
     private bool hit;
     private bool dead;
-    private bool won = false;
 
     // Start is called before the first frame update
     void Start()
@@ -213,17 +214,19 @@ public class PlayerController : MonoBehaviour
     {
         rb.velocity = new Vector2(0, 20);
         dead = true;
-        Invoke("Die", 0.5f);
+        Invoke("Die", 1f);
     }
     private void Die()
     {
-        lives--;
-        transform.position = spawn;
-        cam.transform.position = new Vector3(spawn.x + 7, spawn.y + 2.2f, cam.transform.position.z);
-        speed = 0;
-        rb.velocity = new Vector2(0, 0);
-        health = 3;
-        if (lives <= 0)
+        if (lives < 0)
+        {
+            transform.position = spawn;
+            cam.transform.position = new Vector3(spawn.x + 7, spawn.y + 2.2f, cam.transform.position.z);
+            speed = 0;
+            rb.velocity = new Vector2(0, 0);
+            health = 3;
+        }
+        else
         {
             Lose();
         }
@@ -237,6 +240,6 @@ public class PlayerController : MonoBehaviour
 
     private void Lose()
     {
-
+        lost = true;
     }
 }

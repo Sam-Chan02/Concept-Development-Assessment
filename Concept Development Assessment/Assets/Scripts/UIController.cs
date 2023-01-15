@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class UIController : MonoBehaviour
 {
@@ -18,6 +19,12 @@ public class UIController : MonoBehaviour
     public Text jumpDown;
     public Text lifeDown;
     public Text lives;
+    public Image blocker;
+    public Text loseText;
+    public Text winText;
+    public Button restartButton;
+    private bool lostYet;
+    private bool wonYet;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +36,10 @@ public class UIController : MonoBehaviour
         healthDown.enabled = false;
         jumpDown.enabled = false;
         lifeDown.enabled = false;
+        blocker.enabled = false;
+        loseText.enabled = false;
+        winText.enabled = false;
+        restartButton.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -64,6 +75,39 @@ public class UIController : MonoBehaviour
             coins.text = "0" + coinString;
         }
         lives.text = playerController.lives.ToString();
+
+        if (playerController.won)
+        {
+            if (!wonYet)
+            {
+                wonYet = true;
+                blocker.enabled = true;
+                winText.enabled = true;
+                restartButton.gameObject.SetActive(true);
+                blocker.GetComponent<CanvasGroup>().alpha = 0;
+                winText.GetComponent<CanvasGroup>().alpha = 0;
+                restartButton.GetComponent<CanvasGroup>().alpha = 0;
+            }
+            blocker.GetComponent<CanvasGroup>().alpha += 0.01f;
+            winText.GetComponent<CanvasGroup>().alpha += 0.01f;
+            restartButton.GetComponent<CanvasGroup>().alpha += 0.01f;
+        }
+        if (playerController.lost)
+        {
+            if (!lostYet)
+            {
+                lostYet = true;
+                blocker.enabled = true;
+                loseText.enabled = true;
+                restartButton.gameObject.SetActive(true);
+                blocker.GetComponent<CanvasGroup>().alpha = 0;
+                loseText.GetComponent<CanvasGroup>().alpha = 0;
+                restartButton.GetComponent<CanvasGroup>().alpha = 0;
+            }
+            blocker.GetComponent<CanvasGroup>().alpha += 0.1f;
+            loseText.GetComponent<CanvasGroup>().alpha += 0.1f;
+            restartButton.GetComponent<CanvasGroup>().alpha += 0.1f;
+        }
     }
 
     public void PowerStart(string power)
@@ -126,5 +170,11 @@ public class UIController : MonoBehaviour
     void disableJumpDown()
     {
         jumpDown.enabled = false;
+    }
+
+    public void Restart()
+    {
+        Debug.Log("Restart");
+        SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
     }
 }
