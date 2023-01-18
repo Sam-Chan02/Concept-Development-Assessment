@@ -23,6 +23,7 @@ public class UIController : MonoBehaviour
     public Text loseText;
     public Text winText;
     public Button restartButton;
+    public Button closeButton;
     private bool lostYet;
     private bool wonYet;
 
@@ -40,6 +41,7 @@ public class UIController : MonoBehaviour
         loseText.enabled = false;
         winText.enabled = false;
         restartButton.gameObject.SetActive(false);
+        closeButton.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -84,13 +86,16 @@ public class UIController : MonoBehaviour
                 blocker.enabled = true;
                 winText.enabled = true;
                 restartButton.gameObject.SetActive(true);
+                closeButton.gameObject.SetActive(true);
                 blocker.GetComponent<CanvasGroup>().alpha = 0;
                 winText.GetComponent<CanvasGroup>().alpha = 0;
                 restartButton.GetComponent<CanvasGroup>().alpha = 0;
+                closeButton.GetComponent<CanvasGroup>().alpha = 0;
             }
             blocker.GetComponent<CanvasGroup>().alpha += 0.01f;
             winText.GetComponent<CanvasGroup>().alpha += 0.01f;
             restartButton.GetComponent<CanvasGroup>().alpha += 0.01f;
+            closeButton.GetComponent<CanvasGroup>().alpha += 0.01f;
         }
         if (playerController.lost)
         {
@@ -100,13 +105,16 @@ public class UIController : MonoBehaviour
                 blocker.enabled = true;
                 loseText.enabled = true;
                 restartButton.gameObject.SetActive(true);
+                closeButton.gameObject.SetActive(true);
                 blocker.GetComponent<CanvasGroup>().alpha = 0;
                 loseText.GetComponent<CanvasGroup>().alpha = 0;
                 restartButton.GetComponent<CanvasGroup>().alpha = 0;
+                closeButton.GetComponent<CanvasGroup>().alpha = 0;
             }
             blocker.GetComponent<CanvasGroup>().alpha += 0.1f;
             loseText.GetComponent<CanvasGroup>().alpha += 0.1f;
             restartButton.GetComponent<CanvasGroup>().alpha += 0.1f;
+            closeButton.GetComponent<CanvasGroup>().alpha += 0.1f;
         }
     }
 
@@ -174,7 +182,11 @@ public class UIController : MonoBehaviour
 
     public void Restart()
     {
-        Debug.Log("Restart");
         SceneManager.LoadScene("SampleScene", LoadSceneMode.Single);
+    }
+
+    public void Close()
+    {
+        Application.Quit();
     }
 }

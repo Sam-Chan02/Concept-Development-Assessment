@@ -159,7 +159,7 @@ MonoBehaviour:
   heartVillager: {fileID: 21300000, guid: edf7d8ee17aec3a42874e8da56871432, type: 3}
   lifeVillager: {fileID: 21300000, guid: fe45e90601cec7142a00ee0da18dd4a6, type: 3}
   jumpVillager: {fileID: 21300000, guid: a4fb4328b38ff574988a105f4ee94c8d, type: 3}
-  power: Jump
+  power: 
   jumpForceUpgrade: 50
   jumpHoldForceUpgrade: 10
   UI: {fileID: 0}

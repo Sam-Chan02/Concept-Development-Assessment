@@ -157,6 +157,11 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    private void OnEscape()
+    {
+        Application.Quit();
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         foreach (var contact in collision.contacts)
